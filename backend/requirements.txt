@@ -1,0 +1,26 @@
+# Web Framework & Validation
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.8.0
+pydantic-settings>=2.4.0
+python-multipart>=0.0.9
+
+# Database & Vectors
+SQLAlchemy>=2.0.30
+psycopg2-binary>=2.9.9
+pgvector>=0.3.0
+
+# Document Processing (PDF)
+pdfplumber>=0.11.0
+pypdf>=4.3.0
+
+# NLP & Machine Learning
+sentence-transformers>=3.0.0
+numpy>=1.26.0
+
+# PDF Generation (Learning Agreement export)
+reportlab>=4.2.0
+
+# Testing & Utilities
+pytest>=8.2.0
+python-dotenv>=1.0.1

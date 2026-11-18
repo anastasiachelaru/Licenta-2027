@@ -1,0 +1,21 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: erasmusmatch_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-erasmus}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-erasmus123}
+      POSTGRES_DB: ${POSTGRES_DB:-erasmusmatch}
+    ports:
+      - "5432:5432"
+    volumes:
+      - erasmusmatch_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-erasmus} -d ${POSTGRES_DB:-erasmusmatch}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  erasmusmatch_pgdata:
