@@ -32,3 +32,4 @@ class SyllabusParserService:
 
 
 parser_service = SyllabusParserService()
+

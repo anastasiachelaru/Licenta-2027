@@ -70,3 +70,4 @@ class CurriculumPackage(BaseModel):
     academic_year: Optional[str] = None
     degree_cycle: str = "bachelor"
     courses: List[CanonicalCourse] = []
+
