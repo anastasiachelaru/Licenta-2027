@@ -17,5 +17,17 @@ services:
       timeout: 5s
       retries: 5
 
+  pgweb:
+    image: sosedoff/pgweb:latest
+    container_name: erasmusmatch_pgweb
+    restart: always
+    environment:
+      DATABASE_URL: postgres://erasmus:erasmus123@db:5432/erasmusmatch?sslmode=disable
+    ports:
+      - "8081:8081"
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   erasmusmatch_pgdata:
