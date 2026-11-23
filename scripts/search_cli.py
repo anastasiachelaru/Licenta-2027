@@ -24,11 +24,13 @@ def search_courses(query_text: str, top_k: int = 5):
 
         # 2. Query pgvector using cosine distance (<=>)
         sql = text("""
-            SELECT c.title, c.ects, c.semester, c.course_type,
+            SELECT c.title, c.ects, c.semester, c.course_type, c.language, u.name as uni_name,
                    1 - (ce.embedding <=> CAST(:query_vector AS vector)) AS similarity,
                    c.objectives
             FROM courses c
             JOIN course_embeddings ce ON c.id = ce.course_id
+            JOIN study_programs sp ON c.program_id = sp.id
+            JOIN universities u ON sp.university_id = u.id
             ORDER BY ce.embedding <=> CAST(:query_vector AS vector)
             LIMIT :top_k;
         """)
@@ -38,23 +40,23 @@ def search_courses(query_text: str, top_k: int = 5):
             "top_k": top_k
         }).fetchall()
 
-        print(f"\n" + "=" * 65)
+        print(f"\n" + "=" * 70)
         print(f"🔎 Căutare: \"{query_text}\"")
-        print("=" * 65)
+        print("=" * 70)
 
         for rank, r in enumerate(results, 1):
-            title, ects, sem, c_type, score, objectives = r
+            title, ects, sem, c_type, lang, uni_name, score, objectives = r
             pct = round(score * 100, 1)
             bar = "█" * int(pct // 5) + "░" * (20 - int(pct // 5))
 
-            print(f"\n{rank}. {title.upper()}")
+            print(f"\n{rank}. {title.upper()} ({uni_name})")
             print(f"   📊 Compatibilitate: [{bar}] {pct}%")
-            print(f"   ℹ️ Semestru: {sem} | Credite: {ects} ECTS | Tip: {c_type}")
+            print(f"   ℹ️ Semestru: {sem} | Credite: {ects} ECTS | Tip: {c_type} | Limba: {lang}")
             if objectives:
                 first_obj = objectives.strip().split("\n")[0][:120]
                 print(f"   🎯 Obiectiv: {first_obj}...")
 
-        print("\n" + "=" * 65)
+        print("\n" + "=" * 70)
 
     finally:
         db.close()
